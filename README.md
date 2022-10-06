@@ -11,21 +11,21 @@ https://www.vultr.com/docs/update-python3-on-centos/
 
  1. Run the commands below:
  ```bash
- sudo yum groupinstall 'development tools' -y 
+ sudo yum groupinstall 'development tools' -y
  sudo yum install wget openssl-devel bzip2-devel libffi-devel xz-devel -y
 sudo wget https://www.python.org/ftp/python/3.9.6/Python-3.9.6.tgz
 sudo tar xzf Python-3.9.6.tgz
-cd Python-3.9.6 
+cd Python-3.9.6
 sudo ./configure --enable-optimizations
 sudo make altinstall
 ls /usr/local/bin/python*
-sudo alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.9 1 
-sudo alternatives --set python3 /usr/local/bin/python3.9 
+sudo alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.9 1
+sudo alternatives --set python3 /usr/local/bin/python3.9
 sudo echo "2" | sudo alternatives --config python
 
 sudo /usr/local/bin/python3.9 -m pip install --upgrade pip
 ls /usr/local/bin/pip*
-sudo alternatives --install /usr/bin/pip pip /usr/local/bin/pip3.9 1 
+sudo alternatives --install /usr/bin/pip pip /usr/local/bin/pip3.9 1
 sudo alternatives --set pip /usr/local/bin/pip3.9
 python -V && pip -V
 ```
@@ -41,26 +41,23 @@ Please make sure to have two node one for ansible controler and another for kube
  2. Edit Setup.yaml to map your hostname and user
 `Vi Setup.yaml`
 
-```yaml
+# > Replace \<addhostname> and     \<username>
 name: K8s
-  hosts: <yourhostname>
+  hosts: <addhostname>
   #remote_user: azureuser
   become: yes
   become_method: sudo
   #gather_facts: no
   vars:
-    ansible_ssh_private_key_file: ~/.ssh/azureuser       
+    ansible_ssh_private_key_file: ~/.ssh/azureuser
     k8s_version: "1.24"     # Kubernetes version to be installed
-    
-    user: <youruser> 
+    user: <username>
     #the same user that we made ssh connection for istio
 ```
 
-> Replace \<yourhostname> and     \<youruser>
-
-3.  Run Ansible PlayBook 
+3.  Run Ansible PlayBook
 ` ansible-playbook -i hosts Setup.yml -vv `
-    
+
 
 ## Destroy k8s cluster on master node
 `sh /kube_ansible/ansible_kub/Destroy-env.sh`
